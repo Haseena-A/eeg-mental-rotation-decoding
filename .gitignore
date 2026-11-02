@@ -1,0 +1,24 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+.ipynb_checkpoints/
+.DS_Store
+
+# The Figshare archive is about 1.1 GB compressed and is redistributed by the
+# original authors under CC0. It is downloaded locally and is not part of this
+# code repository. Derived tables are regenerable.
+data/raw/
+data/interim/
+data/processed/
+results/figures/*
+results/tables/*
+results/reports/*
+!results/figures/.gitkeep
+!results/tables/.gitkeep
+!results/reports/.gitkeep
+
+STData.zip

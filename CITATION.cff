@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: "If you use this analysis code, cite it and the original dataset."
+title: "EEG-based modelling of nonverbal cognitive performance during mental rotation tasks"
+type: software
+license: MIT
+repository-code: "https://github.com/placeholder/eeg-mental-rotation-decoding"
+preferred-citation:
+  type: article
+  title: "A Multisensor Dataset of South Asian Post-Graduate Students Working on Mental Rotation Tasks"
+  authors:
+    - family-names: "T S"
+      given-names: Ashwin
+    - family-names: Ranganath
+      given-names: Suraj
+    - family-names: Khanikar
+      given-names: Kabyashree
+    - family-names: Khan
+      given-names: Karishma
+    - family-names: Rajendran
+      given-names: Ramkumar
+    - family-names: Mitra
+      given-names: Ritayan
+  journal: "Scientific Data"
+  year: 2025
+  doi: "10.1038/s41597-025-04865-5"

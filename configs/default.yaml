@@ -1,0 +1,92 @@
+# Analysis configuration.
+#
+# Values under `published` restate what Ashwin et al. (2025), Scientific Data,
+# actually report. Values under `analysis` are decisions of THIS repository.
+# Nothing here is a measurement. Sampling rate, timestamp units, response-time
+# units and the numeric meaning of HSI are estimated from the files at runtime
+# and written into the dataset inventory. They are not hardcoded.
+
+project:
+  name: eeg-mental-rotation-decoding
+  seed: 17
+
+paths:
+  raw_dir: data/raw
+  interim_dir: data/interim
+  processed_dir: data/processed
+  figures_dir: results/figures
+  tables_dir: results/tables
+  reports_dir: results/reports
+
+dataset:
+  figshare_article: "https://doi.org/10.6084/m9.figshare.28120670"
+  figshare_file_url: "https://ndownloader.figshare.com/files/51439640"
+  figshare_md5: bd7fe98a9922077d0229ac52b69a2346
+  paper_doi: "10.1038/s41597-025-04865-5"
+  zip_name: STData.zip
+  # Folder names are matched case-insensitively. The paper says each
+  # participant folder contains files named EEG and PSY.
+  eeg_stem: EEG
+  behaviour_stem: PSY
+
+published:
+  n_participants_reported: 38
+  n_male_reported: 22
+  n_female_reported: 16
+  channels: [AF7, AF8, TP9, TP10]
+  device: "Muse headband, recorded with Mind Monitor"
+  conditions:
+    1: "no time restriction, no feedback"
+    2: "no time restriction, with feedback"
+    3: "time restriction, no feedback"
+  # Durations and item counts reported in the paper. Used as plausibility
+  # checks, not as filters that drop data.
+  category_duration_s: {1: 300, 2: 300, 3: 120}
+  category_n_questions: {1: 10, 2: 10, 3: 20}
+
+# Canonical bands requested by the analysis plan. A band is estimated from raw
+# EEG only when the verified sampling rate satisfies Nyquist for its upper edge
+# (fs > 2 * high_hz). Vendor band columns, when present, are kept regardless.
+bands:
+  delta: [0.5, 4.0]
+  theta: [4.0, 8.0]
+  alpha: [8.0, 13.0]
+  beta: [13.0, 30.0]
+  gamma: [30.0, 45.0]
+
+signal:
+  # 50 Hz is the mains frequency at the recording site (IIT Bombay). The notch
+  # is applied to raw EEG only when fs > 100 Hz, so it is never applied to a
+  # 1 Hz Mind Monitor export.
+  line_noise_hz: 50.0
+  bandpass_hz: [0.5, 45.0]
+  welch_segment_s: 2.0
+  welch_overlap: 0.5
+  # A raw recording whose median interval is slower than this cannot support
+  # an independent spectrum. Vendor band columns are used instead.
+  min_raw_fs_hz: 64.0
+  # Samples whose absolute robust z-score exceeds this are marked artefacts.
+  artefact_robust_z: 6.0
+  # A gap larger than this many median intervals breaks continuity.
+  gap_intervals: 5.0
+  # Welch and filtering need a uniform series. If the 95th percentile interval
+  # exceeds this multiple of the median, the export is treated as irregular.
+  max_interval_ratio: 2.0
+
+sync:
+  # Trial-level alignment is accepted only when at least this fraction of
+  # scored trials contain EEG samples inside the response window.
+  min_trial_coverage: 0.80
+  min_samples_per_trial: 3
+
+models:
+  n_splits: 5
+  classification_estimators: [dummy, logistic, svm, random_forest]
+  regression_estimators: [dummy, linear, random_forest, svr]
+  permutation_repeats: 10
+  # Fixed, pre-declared hyperparameters. With 38 participants, a nested search
+  # would spend the sample on tuning. These are not claimed to be optimal.
+  logistic_c: 1.0
+  svm_c: 1.0
+  forest_trees: 300
+  forest_min_leaf: 2
